@@ -4,12 +4,14 @@ import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
 import { UrlModule } from './url/url.module';
 import { ConfigModule } from '@nestjs/config';
+import { AliasModule } from './alias/alias.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     DatabaseModule,
     UrlModule,
+    AliasModule,
   ],
   controllers: [AppController],
   providers: [AppService],
