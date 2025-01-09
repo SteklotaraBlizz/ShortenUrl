@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Ip,
   Param,
   Post,
   UseFilters,
@@ -14,7 +15,11 @@ import {
   CreateShortUrlRequest,
   CreateShortUrlResponse,
 } from './dto/create-url.dto';
-import { GetUrlInfoResponse, GetUrlResponse } from './dto/get-url.dto';
+import {
+  GetUrlInfoResponse,
+  GetUrlRelatedIpAddressesResponse,
+  GetUrlResponse,
+} from './dto/get-url.dto';
 import { DeleteUrlResponse } from './dto/delete-url.dto';
 import { MainExceptionFilter } from '../exceptions/main-exception.filter';
 
@@ -32,14 +37,23 @@ export class UrlController {
 
   @Get(':shortUrl')
   @AppResponses({ status: 200, type: GetUrlResponse })
-  async getOriginalUrl(@Param('shortUrl') shortUrl: string) {
-    return this.urlService.findOriginalUrl(shortUrl);
+  async getOriginalUrl(
+    @Param('shortUrl') shortUrl: string,
+    @Ip() ipAddress: string,
+  ) {
+    return this.urlService.findOriginalUrl(shortUrl, ipAddress);
   }
 
   @Get('info/:shortUrl')
   @AppResponses({ status: 200, type: GetUrlInfoResponse })
   async getUrlInfo(@Param('shortUrl') shortUrl: string) {
     return this.urlService.findUrlInfo(shortUrl);
+  }
+
+  @Get('analitycs/:shortUrl')
+  @AppResponses({ status: 200, type: GetUrlRelatedIpAddressesResponse })
+  async getRelatedIpAddresses(@Param('shortUrl') shortUrl: string) {
+    return this.urlService.findRelatedIpAddresses(shortUrl);
   }
 
   @Delete(':shortUrl')

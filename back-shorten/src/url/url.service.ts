@@ -9,9 +9,14 @@ import {
   CreateShortUrlResponse,
 } from './dto/create-url.dto';
 import { AliasService } from 'src/alias/alias.service';
-import { GetUrlInfoResponse, GetUrlResponse } from './dto/get-url.dto';
+import {
+  GetUrlInfoResponse,
+  GetUrlRelatedIpAddressesResponse,
+  GetUrlResponse,
+} from './dto/get-url.dto';
 import { MainException } from 'src/exceptions/main.exception';
 import { DeleteUrlResponse } from './dto/delete-url.dto';
+import { IpRecordService } from 'src/ip-records/ip-record.service';
 
 @Injectable()
 export class UrlService {
@@ -19,6 +24,7 @@ export class UrlService {
     @InjectRepository(UrlEntity)
     private readonly urlRepository: Repository<UrlEntity>,
     private readonly aliasService: AliasService,
+    private readonly ipService: IpRecordService,
   ) {}
 
   async createUrl(
@@ -41,6 +47,7 @@ export class UrlService {
 
   async findOriginalUrl(
     shortUrl: UrlEntity['shortUrl'],
+    ipAddress: string,
   ): Promise<GetUrlResponse> {
     const response = await this.urlRepository.findOne({
       where: {
@@ -58,6 +65,7 @@ export class UrlService {
       throw MainException.gone(`${shortUrl} has been expired`);
 
     await this.updateUrlClickCount(response);
+    await this.ipService.createIpRecord(ipAddress, response);
     return new GetUrlResponse(response.originalUrl);
   }
 
@@ -76,6 +84,18 @@ export class UrlService {
       );
 
     return new GetUrlInfoResponse(urlInfo);
+  }
+
+  async findRelatedIpAddresses(shortUrl: UrlEntity['shortUrl']) {
+    const urlInfo = await this.urlRepository.findOne({
+      where: {
+        shortUrl: shortUrl,
+      },
+    });
+
+    const records = await this.ipService.findLastFiveAddresses(urlInfo.id);
+
+    return new GetUrlRelatedIpAddressesResponse(urlInfo.clickCount, records);
   }
 
   async deleteUrl(shortUrl: UrlEntity['shortUrl']): Promise<DeleteUrlResponse> {
