@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IpRecordEntity } from './entities/ip-record.entity';
 import { Repository } from 'typeorm';
-import { UrlEntity } from 'src/url/entities/url.entity';
+import { UrlEntity } from '../url/entities/url.entity';
 
 @Injectable()
 export class IpRecordService {

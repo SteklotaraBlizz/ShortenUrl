@@ -3,20 +3,20 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UrlEntity } from './entities/url.entity';
 import { Repository } from 'typeorm';
 import * as crypto from 'crypto';
-import { shortUrlPrefix } from 'src/constants/short-prefix.constant';
+import { shortUrlPrefix } from '../constants/short-prefix.constant';
 import {
   CreateShortUrlRequest,
   CreateShortUrlResponse,
 } from './dto/create-url.dto';
-import { AliasService } from 'src/alias/alias.service';
+import { AliasService } from '../alias/alias.service';
 import {
   GetUrlInfoResponse,
   GetUrlRelatedIpAddressesResponse,
   GetUrlResponse,
 } from './dto/get-url.dto';
-import { MainException } from 'src/exceptions/main.exception';
+import { MainException } from '../exceptions/main.exception';
 import { DeleteUrlResponse } from './dto/delete-url.dto';
-import { IpRecordService } from 'src/ip-records/ip-record.service';
+import { IpRecordService } from '../ip-records/ip-record.service';
 
 @Injectable()
 export class UrlService {

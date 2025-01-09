@@ -1,7 +1,8 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AliasEntity } from './entities/alias.entity';
 import { Repository } from 'typeorm';
+import { MainException } from '../exceptions/main.exception';
 
 @Injectable()
 export class AliasService {
@@ -27,7 +28,7 @@ export class AliasService {
         },
       })
     )
-      throw new HttpException('ALias already exists', 400);
+      throw MainException.invalidData(`Alias ${alias} already exist`);
     await this.createAlias(alias);
   }
 }

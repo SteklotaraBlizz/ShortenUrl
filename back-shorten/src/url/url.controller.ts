@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { UrlService } from './url.service';
-import { AppResponses } from 'src/decorators/app-responses.decorator';
+import { AppResponses } from '../decorators/app-responses.decorator';
 import {
   CreateShortUrlRequest,
   CreateShortUrlResponse,
